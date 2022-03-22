@@ -38,10 +38,15 @@
     "lodash": "^4.17.4",
     "portscanner": "2.2.0",
     "source-map-support": "^0.x",
-    "teen_process": "^1.15.0"
+    "teen_process": "^1.15.0",
+    "bindings": "^1.3.0",
+    "nan": "^2.11.1",
+    "xmldom": "^0.6.0",
+    "xpath.js": "^1.1.0"
   },
   "scripts": {
-    "build": "gulp transpile",
+    "buildn": "node-gyp configure && node-gyp build",
+    "build": "npm run buildn && gulp transpile",
     "prepare": "gulp transpile && gulp prepublish",
     "mocha": "mocha",
     "test": "gulp once",
@@ -73,6 +78,7 @@
     "pre-commit": "^1.1.3",
     "semantic-release": "^19.0.2",
     "sinon": "^13.0.0",
-    "webdriverio": "^7.0.0"
+    "webdriverio": "^7.0.0",
+    "node-gyp": "^3.8.0"
   }
 }
