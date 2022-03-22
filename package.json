@@ -1,6 +1,6 @@
 {
-  "name": "appium-linux-driver",
-  "version": "1.0.0",
+  "name": "@linux-appium-driver/appium-linux-driver",
+  "version": "0.0.2",
   "description": "AT-SPI2 based Appium driver for linux desktop apps automation",
   "keywords": [
     "appium",
