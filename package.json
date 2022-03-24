@@ -1,6 +1,6 @@
 {
   "name": "@stdspa/appium-linux-driver",
-  "version": "0.0.12",
+  "version": "0.0.33",
   "description": "AT-SPI2 based Appium driver for linux desktop apps automation",
   "keywords": [
     "appium",
@@ -34,7 +34,7 @@
     "@appium/base-driver": "^8.0.0",
     "@appium/support": "^2.46.0",
     "@babel/runtime": "^7.0.0",
-    "@stdspa/stdspalinux_temp": "^0.0.7",
+    "@stdspa/stdspalinux_temp": "^0.0.10",
     "asyncbox": "^2.0.2",
     "axios": "^0.x",
     "bluebird": "^3.5.1",
