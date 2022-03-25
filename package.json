@@ -1,6 +1,6 @@
 {
   "name": "@stdspa/appium-linux-driver",
-  "version": "0.0.33",
+  "version": "0.0.35",
   "description": "AT-SPI2 based Appium driver for linux desktop apps automation",
   "keywords": [
     "appium",
