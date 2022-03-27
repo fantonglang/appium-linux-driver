@@ -4,14 +4,14 @@ import { startServer } from '../../lib/server';
 import chaiAsPromised from 'chai-as-promised';
 import chai from 'chai';
 import { HOST, PORT, MOCHA_TIMEOUT, APP_NAME } from '../utils';
+import { wait4sec } from '../../lib/utils';
 
 chai.should();
 chai.use(chaiAsPromised);
 
 const CAPS = {
-  platformName: 'Linux',
-  automationName: 'atspi2',
-  appName: APP_NAME
+  platformName: 'linux',
+  'appium:appName': APP_NAME
 };
 
 describe('AtSpi2Driver - elements interaction', function () {
@@ -47,11 +47,12 @@ describe('AtSpi2Driver - elements interaction', function () {
 
   it('should set a text to a text view', async function () {
     const el = await driver.findElement('name', 'Find');
-    await el.click();
+    await driver.executeScript('linux: click', [el.ELEMENT]);
     const txtEl = await driver.findElement('xpath', '(//text[@name="Search"])[1]');
-    await txtEl.click();
-    await driver.elementSendKeys(txtEl, 'hello world');
-    await driver.getElementText(txtEl).should.eventually.eql('hello world');
+    await driver.executeScript('linux: click', [txtEl.ELEMENT]);
+    await driver.elementSendKeys(txtEl.ELEMENT, ['hello world']);
+    await wait4sec(1);
+    await driver.getElementText(txtEl.ELEMENT).should.eventually.eql('hello world');
   });
 
   // it('should click a button by absolute coordinate', async function () {

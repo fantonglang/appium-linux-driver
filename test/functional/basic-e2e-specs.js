@@ -9,9 +9,8 @@ chai.should();
 chai.use(chaiAsPromised);
 
 const CAPS = {
-  platformName: 'Linux',
-  automationName: 'atspi2',
-  appName: APP_NAME
+  platformName: 'linux',
+  'appium:appName': APP_NAME
 };
 
 describe('AtSpi2Driver - basic', function () {
@@ -51,8 +50,8 @@ describe('AtSpi2Driver - basic', function () {
   });
 
   it('should take screenshots', async function () {
-    const screenshot = await driver.getScreenshot();
-    _.startsWith(screenshot, 'data:image/png;base64,').should.be.true;
+    const screenshot = await driver.takeScreenshot();
+    _.startsWith(screenshot, 'iVBOR').should.be.true;
   });
 
 });

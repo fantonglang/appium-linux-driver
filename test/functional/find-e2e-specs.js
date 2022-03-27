@@ -9,9 +9,8 @@ chai.should();
 chai.use(chaiAsPromised);
 
 const CAPS = {
-  platformName: 'Linux',
-  automationName: 'atspi2',
-  appName: APP_NAME
+  platformName: 'linux',
+  'appium:appName': APP_NAME
 };
 
 describe('AtSpi2Driver - find elements', function () {
@@ -53,7 +52,7 @@ describe('AtSpi2Driver - find elements', function () {
   it('should find multiple by name', async function () {
     const els = await driver.findElements('name', 'Find');
     els.length.should.eql(1);
-    await driver.getElementAttribute(els[0], 'name').should.eventually.eql('Find');
+    await driver.getElementAttribute(els[0].ELEMENT, 'name').should.eventually.eql('Find');
   });
 
   it('should find by xpath', async function () {
@@ -69,16 +68,16 @@ describe('AtSpi2Driver - find elements', function () {
       'xpath',
       '//toggle-button[@name="Find"]'
     );
-    els.length.should.be.above(1);
-    await driver.getElementAttribute(els[0], 'name').should.eventually.eql('Find');
+    els.length.should.eql(1);
+    await driver.getElementAttribute(els[0].ELEMENT, 'name').should.eventually.eql('Find');
   });
 
   it('should find subelements', async function () {
     const el = await driver.findElement('xpath', '//document-web');
     el.should.exist;
-    const subEls = await driver.findElementsFromElement(el, 'xpath', '//image[@name="Ubuntu Logo"]');
-    subEls.length.should.be.above(1);
-    await driver.getElementAttribute(subEls[0], 'tag').should.eventually.eql('img');
+    const subEls = await driver.findElementsFromElement(el.ELEMENT, 'xpath', '//image[@name="Ubuntu Logo"]');
+    subEls.length.should.eql(1);
+    await driver.getElementAttribute(subEls[0].ELEMENT, 'tag').should.eventually.eql('img');
   });
 
 });
