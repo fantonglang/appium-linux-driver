@@ -10,11 +10,11 @@
     "@jridgewell/trace-mapping" "^0.3.0"
 
 "@appium/base-driver@^8.0.0":
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/@appium/base-driver/-/base-driver-8.3.0.tgz#cd5d814c1c80f85337c5fb63f112c770bbb4d8b9"
-  integrity sha512-4jtrehfUBEXfTJwM3kR8KrNgtUFHOba3YztU5ujeKlXgS1SrdlSeykiG52F0WXRRH5moCVF3HTvHhIr+eyGIJA==
+  version "8.3.1"
+  resolved "https://registry.yarnpkg.com/@appium/base-driver/-/base-driver-8.3.1.tgz#fd89437128f5afd0eed97396b8b39702ac5574cf"
+  integrity sha512-4URUwQ5Kx2rWFRltDG7couH7PBBGGzuAq2U9Q6g1obQfRbzfTYEYaNV9jSi1SRlwFfhRn7IvNtU7adslVZEqLw==
   dependencies:
-    "@appium/support" "^2.56.0"
+    "@appium/support" "^2.56.1"
     "@babel/runtime" "7.17.8"
     "@colors/colors" "1.5.0"
     async-lock "1.3.1"
@@ -94,7 +94,7 @@
     vinyl-paths "3.0.1"
     yargs "17.4.0"
 
-"@appium/support@^2.46.0", "@appium/support@^2.56.0":
+"@appium/support@^2.46.0", "@appium/support@^2.56.1":
   version "2.56.1"
   resolved "https://registry.yarnpkg.com/@appium/support/-/support-2.56.1.tgz#5954e7e6aa1e0de6de4bddb6023c2b0cc8f9a4a9"
   integrity sha512-7RvFxkK94MDeisvj15j8DCoOuj2H/RO9MW1kAePc3UJISA/be+wO2yndoeZeRgvvpHonfO57u2s+xzxQCxCfBA==
