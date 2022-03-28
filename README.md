@@ -1,1 +1,515 @@
-# appium-linux-driver
+Appium Linux Driver
+====
+
+[![NPM version](https://img.shields.io/npm/v/@stdspa/appium-linux-driver.svg)](https://npmjs.org/package/@stdspa/appium-linux-driver)
+[![Downloads](https://img.shields.io/npm/dm/@stdspa/appium-linux-driver.svg)](https://npmjs.org/package/@stdspa/appium-linux-driver)
+
+[![Release](https://github.com/fantonglang/appium-linux-driver/actions/workflows/publish.js.yml/badge.svg)](https://github.com/fantonglang/appium-linux-driver/actions/workflows/publish.js.yml)
+
+
+This is Appium driver for automating linux applications using Apple's [AtSpi2](https://www.freedesktop.org/wiki/Accessibility/AT-SPI2/) framework.
+The driver operates in scope of [W3C WebDriver protocol](https://www.w3.org/TR/webdriver/) with several custom extensions to cover operating-system specific scenarios.
+Yaoshi technical consultant sponses this project and contributed the underlying linux automation framework. The automation framework is distributed as debian installer.
+
+
+## Requirements
+
+Running a linux automated test requires to install the following three components:
+- The forked version of Appium: [https://github.com/fantonglang/appium](https://github.com/fantonglang/appium)
+- This linux driver: [https://github.com/fantonglang/appium-linux-driver](https://github.com/fantonglang/appium-linux-driver)
+- Yaoshi's automation framework
+
+### Install and run forked appium
+
+``` shell
+git clone https://github.com/fantonglang/appium
+cd appium
+yarn install
+node ./
+```
+
+The linux driver is referenced as dependency in appium, so no need to install it explicitly.
+
+### Yaoshi automation framework
+
+It has been tested on Ubuntu 20.04/18.04 LTS. Here is the download link for [installer](/installers/stdspalinux-ubuntu_18_04.deb). Install it with the following instructions:
+``` shell
+sudo apt-get install gdebi-core
+sudo gdebi stdspalinux-ubuntu_18_04.deb
+```
+
+We have plan to publish the installer for deepin, and also docker image for test automation in the cloud native way.
+
+Any requests, such as support another linux distribution; extend user interaction gestures; build a commercial product with better performance and more capabilities, please always feel free to contact me: 
+
+Name | Email | Wechat
+--- | --- | ---
+Fan Tong | zhao_sun@hotmail.com | S597653509
+
+### UI Inspector
+
+A custom [UI inspector](/installers/linux-inspector) is provided for users. It can:
+- List all the running windows with their names. Window name is used as parameter to switch between windows.
+- Show XML UI hierachy of a window, and validate XPath. The user experience is inspired by Appium Inspector.
+
+## Capabilities
+
+Capability Name | Description
+--- | ---
+platformName | Should be set to `linux`
+automationName | Must always be set to `atspi2`. Values of automationName are compared case-insensitively.
+appium:appName | The path of the application to automate, for example `/bin/yelp`, or short-hand `yelp` because `/bin` is in the path environment variable. This is a required capability. If the given application is not installed then an error will be thrown on session startup. If the application is already running then it will be killed and restarted.
+
+
+## Element Attributes
+
+Linux driver supports the following element attributes:
+
+Name | Description | Example
+--- | --- | ---
+rect | Coordinates of bounding element rectangle | {x: 1, y: 2, width: 100, height: 200}
+size | Size of bounding element rectangle | {width: 100, height: 200}
+name | Element's name value. Could be empty | 'my name'
+text | Element's text value. Could be empty | 'my text'
+
+More attributes could be visited via the `WebElement.get_property(name: str)` API. Here is an example source of UI element: `<tree-item name="package.json" pid="2575" toolkit="Chromium__1.0" states="[ENABLED,FOCUSABLE,SELECTABLE,SELECTED,SENSITIVE,SHOWING,VISIBLE]" rect="[48,746,368,22]" text-align="left" explicit-name="true" class="monaco-list-row focused selected" display="block" posinset="9" level="2" xml-roles="treeitem" tag="div" id="list_id_2_37" setsize="11" />`.
+
+To get the states of an element, use the property `states`. e.g. to judge if the element is selected or not, write:
+``` python
+if contains(el.get_property('states'), 'SELECTED'):
+    print('element is selected')
+```
+
+Element attribute values could be retrieved from the XML page source. [UI inspector](/installers/linux-inspector) can also visualize element's attributes. All attributes which present in the XML page source could be used for elements location, including but not limited to the attributes in the table.
+
+## Element Location
+
+Linux driver supports the following location strategies:
+
+Name | Description | Example
+--- | --- | ---
+name | The name strategy uses element's `name` attribute for lookup. | `driver.find_element(AppiumBy.NAME, 'Find')`
+xpath | For elements lookup Xpath strategy the driver uses the same XML tree that is generated by page source API. Only Xpath 1.0 is supported (based on xpath.js). | `driver.find_element(AppiumBy.XPATH, "//document-web")`
+
+Check the [integration tests](/test/functional/find-e2e-specs.js) for more examples on different location strategies usage.
+
+## Other Appium Standard APIs (Python webdriver client)
+
+### Element: Set Text / Set Value
+
+Enter text or value in the input element
+
+#### Arguments
+
+Name | Type | Required | Description | Example
+--- | --- | --- | --- | ---
+keys | string | yes | The string value to enter in the input element. | 'example text'
+
+#### Example
+
+``` python
+el.set_text('example text')
+
+el.set_value(12)
+```
+
+### Element: Click
+
+Perform click gesture on an element
+
+#### Arguments
+
+No Arguments
+
+#### Example
+
+``` python
+el.click()
+```
+
+### Press Key Code
+
+Perform press key code gesture. Key code like 'F1', 'F2', 'Delete', 'Return', 'Up', 'Down', 'Left', 'Right'. Combination key can be performed by combining the metastate like 'CONTROL', 'ALT', 'SHIFT'.
+
+The press key code gesture can also simulate press alphabat keys like 'a', 'b', 'c', ..., 'z'. But then the keycode field should use negative value. e.g. the ascii code for 'a' is 97, then the keycode value is -97.
+
+#### Arguments
+
+Name | Type | Required | Description | Example
+--- | --- | --- | --- | ---
+keycode | int | yes | Refer to [keycode enumeration](#keycode-enumeration) | 65535(DELETE), -97(a)
+metastate | int | no | Refer to [metastate enumeration](#metastate-enumeration) | 0(None), 64(META), 8(ALT),4(CONTROL), 1(SHIFT)
+
+#### Example
+
+``` python
+driver.press_keycode(65473, 8) # alt + f4
+driver.press_keycode(-118, 4) # control + v
+```
+
+#### Keycode Enumeration
+
+name | keycode | name | keycode
+--- | --- | --- | ---
+NOT_A_KEY | 9999 | a | -97
+BACKSPACE | 65288 | b | -98
+DELETE | 65535 | c | -99
+RETURN | 65293 | d | -100
+TAB | 65289 | e | -101
+ESCAPE | 65307 | f | -102
+UP | 65362 | g | -103
+DOWN | 65364 | h | -104
+RIGHT | 65363 | i | -105
+LEFT | 65361 | j | -106
+HOME | 65360 | k | -107
+END | 65367 | l | -108
+PAGEUP | 65365 | m | -109
+PAGEDOWN | 65366 | n | -110
+F1 | 65470 | o | -111
+F2 | 65471 | p | -112
+F3 | 65472 | q | -113
+F4 | 65473 | r | -114
+F5 | 65474 | s | -115
+F6 | 65475 | t | -116
+F7 | 65476 | u | -117
+F8 | 65477 | v | -118
+F9 | 65478 | w | -119
+F10 | 65479 | x | -120
+F11 | 65480 | y | -121
+F12 | 65481 | z | -122
+F13 | 65482
+F14 | 65483
+F15 | 65484
+F16 | 65485
+F17 | 65486
+F18 | 65487
+F19 | 65488
+F20 | 65489
+F21 | 65490
+F22 | 65491
+F23 | 65492
+F24 | 65493
+META | 65515
+LMETA | 65515
+RMETA | 65516
+ALT | 65513
+LALT | 65513
+RALT | 65514
+CONTROL | 65507
+LCONTROL | 65507
+RCONTROL | 65508
+SHIFT | 65505
+LSHIFT | 65505
+RSHIFT | 65506
+CAPSLOCK | 65510
+SPACE | 32
+INSERT | 65379
+PRINTSCREEN | 65377
+MENU | 9999
+NUMPAD_0 | 65456
+NUMPAD_1 | 65457
+NUMPAD_2 | 65458
+NUMPAD_3 | 65459
+NUMPAD_4 | 65460
+NUMPAD_5 | 65461
+NUMPAD_6 | 65462
+NUMPAD_7 | 65463
+NUMPAD_8 | 65464
+NUMPAD_9 | 65465
+NUMPAD_LOCK | 65407
+NUMPAD_DECIMAL | 65454
+NUMPAD_PLUS | 78
+NUMPAD_MINUS | 74
+NUMPAD_MUL | 55
+NUMPAD_DIV | 98
+NUMPAD_CLEAR | 9999
+NUMPAD_ENTER | 96
+NUMPAD_EQUAL | 61
+AUDIO_VOLUME_MUTE | 269025042
+AUDIO_VOLUME_DOWN | 269025041
+AUDIO_VOLUME_UP | 269025043
+AUDIO_PLAY | 269025044
+AUDIO_STOP | 269025045
+AUDIO_PAUSE | 269025073
+AUDIO_PREV | 269025046
+AUDIO_NEXT | 269025047
+AUDIO_REWIND | 269025086
+AUDIO_FORWARD | 269025175
+AUDIO_REPEAT | 269025176
+AUDIO_RANDOM | 269025177
+LIGHTS_MON_UP | 269025026
+LIGHTS_MON_DOWN | 269025027
+LIGHTS_KBD_TOGGLE | 269025028
+LIGHTS_KBD_UP | 269025029
+LIGHTS_KBD_DOWN | 269025030
+
+#### Metastate Enumeration
+
+name | metastate
+--- | ---
+None | 0
+META | 64
+ALT | 8
+CONTROL | 4
+SHIFT | 1
+
+### Long Press Key Code
+
+The same with press key code, except for pressing the key for a longer time (0.5s)
+
+### Element: Get Property / Attribute
+
+Get the element's property value.
+
+#### Arguments
+
+Name | Type | Required | Description | Example
+--- | --- | --- | --- | ---
+name | string | yes | the property name | 'states'
+
+#### Example
+
+```python
+name = el.get_property('name') # get the name property value
+name = el.get_attribute('name') # get the name property value, equivalent to get_property
+```
+
+### Element: Clear
+
+Clear the (input) element's text
+
+#### Arguments
+
+No arguments
+
+#### Example
+
+```python
+el.clear()
+```
+
+### Element: Screenshot
+
+Take screenshot of the element
+
+#### Arguments
+
+Name | Type | Required | Description | Example
+--- | --- | --- | --- | ---
+filename | string | yes | the path to save the screenshot | '.pics/a.png'
+
+#### Example
+
+```python
+el.screenshot('.pics/a.png')
+```
+
+### Screenshot
+
+Take screenshot of the window
+
+#### Arguments
+
+Name | Type | Required | Description | Example
+--- | --- | --- | --- | ---
+filename | string | yes | the path to save the screenshot | '.pics/a.png'
+
+#### Example
+
+```python
+driver.get_screenshot_as_file('.pics/a.png')
+```
+
+## Platform-Specific Extensions
+
+Beside of standard W3C APIs the driver provides the following custom command extensions to execute platform specific scenarios:
+
+### linux: getDisplaySize
+
+Get the width and height of the display
+
+#### Arguments
+
+No arguments
+
+#### Example
+
+```python
+size = driver.execute_script('linux: getDisplaySize')
+print(size) # outputs: {'width': 1440, 'height': 900}
+```
+
+### linux: mouseMove
+
+Move the mouse to a given absolute coordinates.
+
+#### Arguments
+
+Name | Type | Required | Description | Example
+--- | --- | --- | --- | ---
+x | int | yes | the x coordinate | 100
+y | int | yes | the y coordinate | 100
+
+#### Example
+
+```python
+driver.execute_script('linux: mouseMove', {"x": 100, "y": 100})
+```
+
+### linux: mouseSwipe
+
+Mouse down at (sx, sy), and move to (ex, ey), and then mouse up.
+
+Effectively swipe from (sx, sy) to (ex, ey)
+
+#### Arguments
+
+Name | Type | Required | Description | Example
+--- | --- | --- | --- | ---
+sx | int | yes | swipe from x coordinate | 500
+sy | int | yes | swipe from y coordinate | 100
+ex | int | yes | swipe to x coordinate | 500
+ey | int | yes | swipe to y coordinate | 700
+
+#### Example
+
+```python
+driver.execute_script('linux: mouseSwipe', {"sx": 500, "sy": 100, "ex": 500, "ey": 700})
+```
+
+### linux: rightClick
+
+Right click on a given absolute coordinates.
+
+#### Arguments
+
+Name | Type | Required | Description | Example
+--- | --- | --- | --- | ---
+x | int | yes | the x coordinate | 100
+y | int | yes | the y coordinate | 100
+
+#### Example
+
+```python
+driver.execute_script('linux: rightClick', {"x": 100, "y": 100})
+```
+
+### linux: doubleClick
+
+Double click on a given absolute coordinates.
+
+#### Arguments
+
+Name | Type | Required | Description | Example
+--- | --- | --- | --- | ---
+x | int | yes | the x coordinate | 100
+y | int | yes | the y coordinate | 100
+
+#### Example
+
+```python
+driver.execute_script('linux: doubleClick', {"x": 100, "y": 100})
+```
+
+### linux: mouseScroll
+
+Simulate mouse scroll horizontally and vertically
+
+#### Arguments
+
+Name | Type | Required | Description | Example
+--- | --- | --- | --- | ---
+moveLeftSteps | int | no | how much scrolls left, when the value is negative, scrolls right, when the value is 0, doesn't scroll horizontally
+moveUpSteps | int | no | how much scrolls up, when the value is negative, scrolls down, when the value is 0, doesn't scroll vertically. 
+
+#### Example
+
+```python
+driver.execute_script('linux: mouseScroll', {"moveLeftSteps": 0, "moveUpSteps": -1}) # scrolls down
+```
+
+### linux: copy
+
+Copy a given string to the system clipboard
+
+#### Arguments
+
+Name | Type | Required | Description | Example
+--- | --- | --- | --- | ---
+str | string | yes | the string to be copied | 'sample copy text'
+
+#### Example
+
+```python
+driver.execute_script('linux: copy', {"str": 'sample copy text'})
+```
+
+### linux: getClipboard
+
+Get the clipboard content
+
+#### Arguments
+
+No Arguments
+
+#### Example
+
+```python
+content = driver.execute_script('linux: getClipboard')
+```
+
+## Application Under Test Concept
+
+The Linux driver has the concept of `Application Under Test`. This is the app, whose path has been passed as `appName` capability.
+If this application is unexpectedly terminated during test session execution then an exception is going to be thrown upon any following session command invocation. In such case the driver assumes the application under test is crashed and it is impossible to proceed.
+Also, the `Application Under Test` is going to be terminated when the testing session quits.
+
+
+## Examples
+
+```python
+# Python3 + PyTest
+import pytest
+from appium import webdriver
+from appium.webdriver.common.appiumby import AppiumBy
+@pytest.fixture()
+def driver():
+    drv = webdriver.Remote('http://localhost:4723/wd/hub', {
+        # automationName capability presence is mandatory for this Linux Driver to be selected
+        'automationName': 'atspi2',
+        'platformName': 'linux',
+        'bundleId': 'yelp',
+    })
+    yield drv
+    drv.quit()
+def test_edit_text(driver):
+    find_el = driver.find_element(by=AppiumBy.NAME, value='Find')
+    find_el.click()
+    edit_field = driver.find_element(by=AppiumBy.XPATH, value='(//text[@name="Search"])[1]')
+    edit_field.send_keys('hello world')
+    edit_field = driver.find_element(by=AppiumBy.XPATH, value='(//text[@name="Search"])[1]')
+    assert edit_field.text == 'hello world'
+    edit_field.clear()
+    edit_field = driver.find_element(by=AppiumBy.XPATH, value='(//text[@name="Search"])[1]')
+    assert edit_field.text == ''
+```
+
+
+## Parallel Execution
+
+Parallel execution of multiple Linux driver instances is highly discouraged. Only one UI test must be running at the same time.
+
+
+## Development & Testing
+
+This module uses the same [development tools](https://github.com/appium/appium/tree/master/docs/cn/contributing-to-appium) as the other Appium drivers.
+
+Check out the source. Then run:
+
+```bash
+npm install
+gulp watch
+```
+
+Execute `npm run test` to run unit tests and `npm run e2e-test` to run integration tests.
+
