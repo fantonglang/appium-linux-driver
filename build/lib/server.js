@@ -1,0 +1,37 @@
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.startServer = startServer;
+
+require("source-map-support/register");
+
+var _logger = _interopRequireDefault(require("./logger"));
+
+var _baseDriver = require("@appium/base-driver");
+
+var _driver = _interopRequireDefault(require("./driver"));
+
+async function startServer(port, address, relaxedSecurityEnabled = false) {
+  const d = new _driver.default({
+    port,
+    address
+  });
+  d.relaxedSecurityEnabled = relaxedSecurityEnabled;
+  const routeConfiguringFunction = (0, _baseDriver.routeConfiguringFunction)(d);
+  const server = await (0, _baseDriver.server)({
+    routeConfiguringFunction,
+    port,
+    hostname: address
+  });
+
+  _logger.default.info(`AtSpi2 Driver server listening on http://${address}:${port}`);
+
+  return server;
+}require('source-map-support').install();
+
+
+//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImxpYi9zZXJ2ZXIuanMiXSwibmFtZXMiOlsic3RhcnRTZXJ2ZXIiLCJwb3J0IiwiYWRkcmVzcyIsInJlbGF4ZWRTZWN1cml0eUVuYWJsZWQiLCJkIiwiQXRTcGkyRHJpdmVyIiwicm91dGVDb25maWd1cmluZ0Z1bmN0aW9uIiwic2VydmVyIiwiaG9zdG5hbWUiLCJsb2ciLCJpbmZvIl0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7OztBQUFBOztBQUNBOztBQUlBOztBQUVBLGVBQWVBLFdBQWYsQ0FBNEJDLElBQTVCLEVBQWtDQyxPQUFsQyxFQUEyQ0Msc0JBQXNCLEdBQUcsS0FBcEUsRUFBMkU7QUFDekUsUUFBTUMsQ0FBQyxHQUFHLElBQUlDLGVBQUosQ0FBaUI7QUFBQ0osSUFBQUEsSUFBRDtBQUFPQyxJQUFBQTtBQUFQLEdBQWpCLENBQVY7QUFDQUUsRUFBQUEsQ0FBQyxDQUFDRCxzQkFBRixHQUEyQkEsc0JBQTNCO0FBQ0EsUUFBTUcsd0JBQXdCLEdBQUcsMENBQVdGLENBQVgsQ0FBakM7QUFDQSxRQUFNRyxNQUFNLEdBQUcsTUFBTSx3QkFBVztBQUM5QkQsSUFBQUEsd0JBRDhCO0FBRTlCTCxJQUFBQSxJQUY4QjtBQUc5Qk8sSUFBQUEsUUFBUSxFQUFFTjtBQUhvQixHQUFYLENBQXJCOztBQUtBTyxrQkFBSUMsSUFBSixDQUFVLDRDQUEyQ1IsT0FBUSxJQUFHRCxJQUFLLEVBQXJFOztBQUNBLFNBQU9NLE1BQVA7QUFDRCIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBsb2cgZnJvbSAnLi9sb2dnZXInO1xuaW1wb3J0IHtcbiAgc2VydmVyIGFzIGJhc2VTZXJ2ZXIsXG4gIHJvdXRlQ29uZmlndXJpbmdGdW5jdGlvbiBhcyBtYWtlUm91dGVyXG59IGZyb20gJ0BhcHBpdW0vYmFzZS1kcml2ZXInO1xuaW1wb3J0IEF0U3BpMkRyaXZlciBmcm9tICcuL2RyaXZlcic7XG5cbmFzeW5jIGZ1bmN0aW9uIHN0YXJ0U2VydmVyIChwb3J0LCBhZGRyZXNzLCByZWxheGVkU2VjdXJpdHlFbmFibGVkID0gZmFsc2UpIHtcbiAgY29uc3QgZCA9IG5ldyBBdFNwaTJEcml2ZXIoe3BvcnQsIGFkZHJlc3N9KTtcbiAgZC5yZWxheGVkU2VjdXJpdHlFbmFibGVkID0gcmVsYXhlZFNlY3VyaXR5RW5hYmxlZDtcbiAgY29uc3Qgcm91dGVDb25maWd1cmluZ0Z1bmN0aW9uID0gbWFrZVJvdXRlcihkKTtcbiAgY29uc3Qgc2VydmVyID0gYXdhaXQgYmFzZVNlcnZlcih7XG4gICAgcm91dGVDb25maWd1cmluZ0Z1bmN0aW9uLFxuICAgIHBvcnQsXG4gICAgaG9zdG5hbWU6IGFkZHJlc3MsXG4gIH0pO1xuICBsb2cuaW5mbyhgQXRTcGkyIERyaXZlciBzZXJ2ZXIgbGlzdGVuaW5nIG9uIGh0dHA6Ly8ke2FkZHJlc3N9OiR7cG9ydH1gKTtcbiAgcmV0dXJuIHNlcnZlcjtcbn1cblxuZXhwb3J0IHsgc3RhcnRTZXJ2ZXIgfTtcbiJdLCJmaWxlIjoibGliL3NlcnZlci5qcyIsInNvdXJjZVJvb3QiOiIuLi8uLiJ9
