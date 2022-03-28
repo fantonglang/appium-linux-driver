@@ -7,7 +7,7 @@ Appium Linux Driver
 [![Release](https://github.com/fantonglang/appium-linux-driver/actions/workflows/publish.js.yml/badge.svg)](https://github.com/fantonglang/appium-linux-driver/actions/workflows/publish.js.yml)
 
 
-This is Appium driver for automating linux applications using Apple's [AtSpi2](https://www.freedesktop.org/wiki/Accessibility/AT-SPI2/) framework.
+This is Appium driver for automating linux applications using Linux's [AtSpi2](https://www.freedesktop.org/wiki/Accessibility/AT-SPI2/) framework.
 The driver operates in scope of [W3C WebDriver protocol](https://www.w3.org/TR/webdriver/) with several custom extensions to cover operating-system specific scenarios.
 Yaoshi technical consultant sponses this project and contributed the underlying linux automation framework. The automation framework is distributed as debian installer.
 
