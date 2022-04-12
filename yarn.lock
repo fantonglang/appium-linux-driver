@@ -10490,9 +10490,9 @@ webdriver@7.19.3:
     lodash.merge "^4.6.1"
 
 webdriverio@^7.0.0:
-  version "7.19.3"
-  resolved "https://registry.yarnpkg.com/webdriverio/-/webdriverio-7.19.3.tgz#7d8b56a9dafc25a0c4a0dd33d7ff1481a09e3357"
-  integrity sha512-SZCRrixaML9CxdBZ3h4XC4PR8e70OESNWJtbxV4ZL6JFzaQry+nNb+ewsOhekcHSfQN7kktN3AhazDAJh/1j2A==
+  version "7.19.4"
+  resolved "https://registry.yarnpkg.com/webdriverio/-/webdriverio-7.19.4.tgz#6366a7cf5b9166cc36092c06de5e0cf3af52690b"
+  integrity sha512-4ZwP89SZ4rF5tVaAeA7HNND5Obwsb4p010rifNeHhd6EMv8QGk0ZF/Fx29T9FyCMKlf3BCFrjb+E6VbN1+PRrQ==
   dependencies:
     "@types/aria-query" "^5.0.0"
     "@types/node" "^17.0.4"
