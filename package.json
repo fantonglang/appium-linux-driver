@@ -66,7 +66,7 @@
   ],
   "devDependencies": {
     "@appium/eslint-config-appium": "^5.0.0",
-    "@appium/gulp-plugins": "^6.0.0",
+    "@appium/gulp-plugins": "^8.0.0",
     "@babel/core": "^7.16.0",
     "@babel/eslint-parser": "^7.16.3",
     "@semantic-release/git": "^10.0.1",
