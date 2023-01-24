@@ -31,7 +31,7 @@
   "homepage": "https://github.com/fantonglang/appium-linux-driver#readme",
   "bin": {},
   "dependencies": {
-    "@appium/base-driver": "^8.0.0",
+    "@appium/base-driver": "^9.3.0",
     "@appium/support": "^2.46.0",
     "@babel/runtime": "^7.0.0",
     "@stdspa/stdspalinux_temp": "^0.0.10",
