@@ -32,7 +32,7 @@
   "bin": {},
   "dependencies": {
     "@appium/base-driver": "^8.0.0",
-    "@appium/support": "^2.46.0",
+    "@appium/support": "^3.1.4",
     "@babel/runtime": "^7.0.0",
     "@stdspa/stdspalinux_temp": "^0.0.10",
     "asyncbox": "^2.0.2",
